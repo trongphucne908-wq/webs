@@ -16,6 +16,10 @@
             padding: 0;
             box-sizing: border-box;
             font-family: 'Times New Roman', Times, serif, sans-serif;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
         }
 
         body {
@@ -112,8 +116,8 @@
             }
             100% {
                 opacity: 0;
-                transform: scale(1.35); /* Phóng to nhẹ nhàng */
-                filter: blur(4px); /* Làm nhòe mượt */
+                transform: scale(1.35);
+                filter: blur(4px);
             }
         }
 
@@ -149,33 +153,66 @@
             color: #888;
         }
 
+        /* NÚT BẤM VÀ HIỆU ỨNG GLOW GRADIENT VIỀN KHI CLICK */
         .btn-song {
+            position: relative;
             width: 100%;
             padding: 16px 24px;
             font-size: 1.1rem;
             font-weight: 400;
-            background: transparent;
+            background: var(--bg-color);
             color: var(--text-color);
             border: 1px solid var(--border-color);
             border-radius: 4px;
             cursor: pointer;
             letter-spacing: 0.5px;
-            transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+            transition: border-color 0.3s ease, background-color 0.3s ease, transform 0.2s ease;
             text-align: center;
             text-decoration: underline;
             text-underline-offset: 6px;
             text-decoration-color: rgba(255, 255, 255, 0.3);
+            outline: none;
+            z-index: 1;
+            -webkit-user-select: none;
+            user-select: none;
         }
 
         .btn-song:hover {
             border-color: #ffffff;
             background-color: rgba(255, 255, 255, 0.05);
-            transform: translateY(-2px);
             text-decoration-color: #ffffff;
         }
 
+        .btn-song::after {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(90deg, #ff007f, #00f2fe, #4facfe, #ff007f);
+            background-size: 300% 300%;
+            border-radius: 6px;
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+            filter: blur(6px);
+        }
+
         .btn-song:active {
-            transform: translateY(0);
+            transform: scale(0.98);
+            border-color: transparent;
+        }
+
+        .btn-song:active::after {
+            opacity: 1;
+            animation: borderGlow 1.5s linear infinite;
+        }
+
+        @keyframes borderGlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
         /* 3. Màn hình Karaoke */
@@ -228,10 +265,11 @@
         }
 
         .btn-back {
+            position: relative;
             margin-top: 24px;
             padding: 10px 24px;
             font-size: 0.95rem;
-            background: transparent;
+            background: var(--bg-color);
             color: #aaa;
             border: 1px solid var(--border-color);
             border-radius: 4px;
@@ -240,11 +278,44 @@
             text-decoration: underline;
             text-underline-offset: 4px;
             transition: all 0.3s ease;
+            outline: none;
+            z-index: 1;
+            /* Đã khóa hoàn toàn lỗi tô xanh/bôi đen */
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
         }
 
         .btn-back:hover {
             color: var(--text-color);
             border-color: var(--text-color);
+        }
+
+        .btn-back::after {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(90deg, #ff007f, #00f2fe, #4facfe, #ff007f);
+            background-size: 300% 300%;
+            border-radius: 6px;
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+            filter: blur(6px);
+        }
+
+        .btn-back:active {
+            transform: scale(0.98);
+            border-color: transparent;
+        }
+
+        .btn-back:active::after {
+            opacity: 1;
+            animation: borderGlow 1.5s linear infinite;
         }
     </style>
 </head>
@@ -277,14 +348,12 @@
     <script>
         // Điều khiển chuyển cảnh
         window.addEventListener('DOMContentLoaded', () => {
-            // Sau 2.5s kích hoạt hiệu ứng vừa phóng to vừa mờ dần
             setTimeout(() => {
                 const welcomeScreen = document.getElementById('welcome-screen');
                 const mainMenu = document.getElementById('main-menu');
                 
                 welcomeScreen.classList.add('zoom-fade-out');
                 
-                // Sau khi chữ phóng to và biến mất hoàn toàn (1.2s) thì hiện Menu
                 setTimeout(() => {
                     welcomeScreen.style.display = 'none';
                     mainMenu.classList.add('show');
@@ -292,7 +361,7 @@
             }, 2500);
         });
 
-        // Danh sách bài hát đã đúng link
+        // Danh sách bài hát chuẩn link
         const songs = {
             'thannlan': {
                 title: 'Con thằn lằn con - Karaoke',
@@ -347,5 +416,4 @@
         }
     </script>
 </body>
-  </html>
-  
+</html>
