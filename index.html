@@ -3,12 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Góc Karaoke - Cô Oanh</title>
+    <title>6A3 Bá Khí - By TrongPhuc</title>
     <style>
         :root {
             --bg-color: #0d0d0d;
             --text-color: #f1f1f1;
             --border-color: #333333;
+            --scale-factor: 1; /* Biến điều chỉnh tỉ lệ GUI */
         }
 
         * {
@@ -46,11 +47,19 @@
             align-items: center;
             background-color: var(--bg-color);
             z-index: 100;
+            padding: 20px;
         }
 
         /* Animation xuất hiện chữ ban đầu */
+        .welcome-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s ease;
+        }
+
         .welcome-text {
-            font-size: 2.8rem;
+            font-size: calc(2.8rem * var(--scale-factor));
             font-weight: 400;
             letter-spacing: 2px;
             text-decoration: underline;
@@ -60,10 +69,11 @@
             animation: welcomeSmooth 1.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
             opacity: 0;
             transform: translateY(15px);
+            text-align: center;
         }
 
         .welcome-watermark {
-            font-size: 1rem;
+            font-size: calc(1rem * var(--scale-factor));
             color: #888888;
             letter-spacing: 1.5px;
             text-decoration: underline;
@@ -74,7 +84,63 @@
             animation: watermarkFadeIn 2s cubic-bezier(0.16, 1, 0.3, 1) 0.4s forwards;
         }
 
-        /* Keyframes xuất hiện chữ */
+        /* Phần chọn thiết bị với ANIMATION XUẤT HIỆN MƯỢT MA */
+        .device-selector {
+            margin-top: 35px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            opacity: 0;
+            transform: translateY(20px) scale(0.95);
+            animation: deviceSelectorSmooth 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.8s forwards;
+            width: 100%;
+            max-width: 280px;
+        }
+
+        .device-title {
+            font-size: calc(1rem * var(--scale-factor));
+            color: #aaa;
+            letter-spacing: 1px;
+            text-decoration: underline;
+            text-underline-offset: 6px;
+            text-decoration-thickness: 1px;
+            margin-bottom: 4px;
+        }
+
+        .btn-device {
+            position: relative;
+            width: 100%;
+            padding: 12px 20px;
+            font-size: calc(1rem * var(--scale-factor));
+            font-weight: 400;
+            background: var(--bg-color);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            cursor: pointer;
+            letter-spacing: 0.5px;
+            transition: border-color 0.4s ease, background-color 0.4s ease, transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            text-align: center;
+            text-decoration: underline;
+            text-underline-offset: 6px;
+            text-decoration-color: rgba(255, 255, 255, 0.3);
+            outline: none;
+            z-index: 1;
+        }
+
+        .btn-device:hover {
+            border-color: #ffffff;
+            background-color: rgba(255, 255, 255, 0.05);
+            text-decoration-color: #ffffff;
+        }
+
+        /* Hiệu ứng nhấp chuột mượt */
+        .btn-device:active {
+            transform: scale(0.96);
+        }
+
+        /* Keyframes xuất hiện chữ & bảng chọn */
         @keyframes welcomeSmooth {
             0% {
                 opacity: 0;
@@ -103,9 +169,21 @@
             }
         }
 
-        /* HIỆU ỨNG BIẾN MẤT: Phóng to chậm + Mờ dần */
-        #welcome-screen.zoom-fade-out .welcome-text,
-        #welcome-screen.zoom-fade-out .welcome-watermark {
+        @keyframes deviceSelectorSmooth {
+            0% {
+                opacity: 0;
+                transform: translateY(20px) scale(0.95);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* HIỆU ỨNG BIẾN MẤT KHI CHỌN THIẾT BỊ: Phóng to chậm + Mờ dần */
+        #welcome-screen.zoom-fade-out .welcome-content,
+        #welcome-screen.zoom-fade-out .welcome-watermark,
+        #welcome-screen.zoom-fade-out .device-selector {
             animation: zoomAndFade 1.2s cubic-bezier(0.25, 1, 0.5, 1) forwards !important;
         }
 
@@ -126,13 +204,13 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 16px;
+            gap: calc(16px * var(--scale-factor));
             opacity: 0;
             transform: translateY(20px);
             transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
             pointer-events: none;
             width: 100%;
-            max-width: 400px;
+            max-width: calc(400px * var(--scale-factor));
             padding: 0 20px;
         }
 
@@ -143,7 +221,7 @@
         }
 
         .menu-title {
-            font-size: 1.4rem;
+            font-size: calc(1.4rem * var(--scale-factor));
             font-weight: 400;
             letter-spacing: 1px;
             margin-bottom: 10px;
@@ -157,8 +235,8 @@
         .btn-song {
             position: relative;
             width: 100%;
-            padding: 16px 24px;
-            font-size: 1.1rem;
+            padding: calc(16px * var(--scale-factor)) calc(24px * var(--scale-factor));
+            font-size: calc(1.1rem * var(--scale-factor));
             font-weight: 400;
             background: var(--bg-color);
             color: var(--text-color);
@@ -221,7 +299,7 @@
             flex-direction: column;
             align-items: center;
             width: 90%;
-            max-width: 750px;
+            max-width: calc(750px * var(--scale-factor));
             opacity: 0;
             transform: scale(0.98);
             transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
@@ -234,7 +312,7 @@
         }
 
         #song-title {
-            font-size: 1.2rem;
+            font-size: calc(1.2rem * var(--scale-factor));
             font-weight: 400;
             margin-bottom: 20px;
             letter-spacing: 1px;
@@ -242,6 +320,7 @@
             text-underline-offset: 8px;
             text-decoration-thickness: 1px;
             color: var(--text-color);
+            text-align: center;
         }
 
         .video-wrapper {
@@ -266,9 +345,9 @@
 
         .btn-back {
             position: relative;
-            margin-top: 24px;
-            padding: 10px 24px;
-            font-size: 0.95rem;
+            margin-top: calc(24px * var(--scale-factor));
+            padding: calc(10px * var(--scale-factor)) calc(24px * var(--scale-factor));
+            font-size: calc(0.95rem * var(--scale-factor));
             background: var(--bg-color);
             color: #aaa;
             border: 1px solid var(--border-color);
@@ -280,10 +359,7 @@
             transition: all 0.3s ease;
             outline: none;
             z-index: 1;
-            /* Đã khóa hoàn toàn lỗi tô xanh/bôi đen */
             -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
             user-select: none;
         }
 
@@ -323,8 +399,15 @@
 
     <!-- Màn hình Welcome -->
     <div id="welcome-screen">
-        <div class="welcome-text">Welcome "Cô Oanh"</div>
-        <div class="welcome-watermark">made by TrongPhuc</div>
+        <div class="welcome-content">
+            <div class="welcome-text">Welcome "Cô Oanh"</div>
+            <div class="welcome-watermark">made by TrongPhuc</div>
+        </div>
+        <div class="device-selector">
+            <div class="device-title">Chọn thiết bị sử dụng</div>
+            <button class="btn-device" onclick="selectDevice('pc')">Máy tính</button>
+            <button class="btn-device" onclick="selectDevice('mobile')">Điện thoại</button>
+        </div>
     </div>
 
     <!-- Menu chính -->
@@ -346,20 +429,30 @@
     </div>
 
     <script>
-        // Điều khiển chuyển cảnh
-        window.addEventListener('DOMContentLoaded', () => {
+        // Hàm chọn thiết bị và thực hiện hiệu ứng chuyển cảnh mượt vào trang chính
+        function selectDevice(type) {
+            const root = document.documentElement;
+            if (type === 'pc') {
+                root.style.setProperty('--scale-factor', '1.25'); // GUI to cho máy tính
+            } else {
+                root.style.setProperty('--scale-factor', '0.85'); // GUI nhỏ gọn cho điện thoại
+            }
+
+            const welcomeScreen = document.getElementById('welcome-screen');
+            const mainMenu = document.getElementById('main-menu');
+            
+            // Bật hiệu ứng phóng to mờ dần cho toàn bộ màn hình chào mừng
+            welcomeScreen.classList.add('zoom-fade-out');
+            
             setTimeout(() => {
-                const welcomeScreen = document.getElementById('welcome-screen');
-                const mainMenu = document.getElementById('main-menu');
-                
-                welcomeScreen.classList.add('zoom-fade-out');
-                
-                setTimeout(() => {
-                    welcomeScreen.style.display = 'none';
+                welcomeScreen.style.display = 'none';
+                mainMenu.style.display = 'flex';
+                // Đẩy vào luồng render tiếp theo để hiệu ứng opacity/translateY chạy mượt
+                requestAnimationFrame(() => {
                     mainMenu.classList.add('show');
-                }, 1200);
-            }, 2500);
-        });
+                });
+            }, 1100);
+        }
 
         // Danh sách bài hát chuẩn link
         const songs = {
